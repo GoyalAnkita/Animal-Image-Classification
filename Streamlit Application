@@ -1,0 +1,39 @@
+Streamlit Application
+Create a Streamlit app to allow users to upload animal images.
+Use the trained model to predict the animal in the uploaded image.
+
+
+#Code
+
+import streamlit as st
+from tensorflow.keras.models import load_model
+from tensorflow.keras.preprocessing.image import img_to_array, load_img
+import numpy as np
+from PIL import Image
+
+# Load the trained model
+model = load_model('animal_cnn.h5')
+
+# Animal classes
+animal_classes = ['Cat', 'Dog', 'Horse', 'Lion', 'Elephant', 'Monkey', 'Butterfly', 'Chicken', 'Cow', 'Sheep']
+
+# Streamlit app
+st.title('Animal Image Classification for Kindergarten')
+
+# File uploader
+uploaded_file = st.file_uploader("Choose an image...", type="jpg")
+
+if uploaded_file is not None:
+    image = Image.open(uploaded_file).resize((64, 64))
+    st.image(image, caption='Uploaded Image.', use_column_width=True)
+    
+    # Preprocess the image
+    image_array = img_to_array(image)
+    image_array = np.expand_dims(image_array, axis=0)
+    image_array = image_array / 255.0
+
+    # Make prediction
+    prediction = model.predict(image_array)
+    predicted_class = animal_classes[np.argmax(prediction[0])]
+
+    st.write(f'Predicted Animal: {predicted_class}')
