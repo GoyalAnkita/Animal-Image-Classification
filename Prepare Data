@@ -1,0 +1,29 @@
+1. Data Preparation
+Load and preprocess the Animals-10 dataset.
+Split the dataset into training and testing sets
+
+import numpy as np
+import os
+from tensorflow.keras.preprocessing.image import ImageDataGenerator
+
+# Set the directories for the dataset
+train_dir = 'path/to/animal-dataset/train'
+test_dir = 'path/to/animal-dataset/test'
+
+# Image data generator for training
+train_datagen = ImageDataGenerator(rescale=0.255, shear_range=0.2, zoom_range=0.2, horizontal_flip=True)
+test_datagen = ImageDataGenerator(rescale=0.255)
+
+train_generator = train_datagen.flow_from_directory(
+    train_dir,
+    target_size=(64, 64),
+    batch_size=32,
+    class_mode='categorical'
+)
+
+validation_generator = test_datagen.flow_from_directory(
+    test_dir,
+    target_size=(64, 64),
+    batch_size=32,
+    class_mode='categorical'
+)
